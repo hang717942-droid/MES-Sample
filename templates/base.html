@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MES{% endblock %} | 스마트팩토리 MES</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='app.css') }}" rel="stylesheet">
+</head>
+<body>
+  <header class="mobile-header d-lg-none">
+    <button class="btn btn-link text-white p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"><i class="bi bi-list fs-2"></i></button>
+    <span class="fw-bold">MES</span><span class="small opacity-75">{{ self.title() }}</span>
+  </header>
+  <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar">
+    <div class="brand"><div class="brand-mark">M</div><div><div class="brand-title">MES</div><div class="brand-subtitle">스마트팩토리 생산관리</div></div><button class="btn-close btn-close-white d-lg-none ms-auto" data-bs-dismiss="offcanvas"></button></div>
+    <div class="nav-caption">업무 메뉴</div>
+    <nav class="nav flex-column">
+      {% for endpoint, label, icon in nav_items %}
+      <a class="nav-link {% if request.endpoint == endpoint %}active{% endif %}" href="{{ url_for(endpoint) }}"><i class="bi {{ icon }}"></i><span>{{ label }}</span></a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-footer"><span class="status-dot"></span> SQLite 로컬 데이터베이스</div>
+  </aside>
+  <main class="main-area">
+    <div class="topbar d-none d-lg-flex"><div><span class="text-muted">MES / </span><strong>{% block page_heading %}{% endblock %}</strong></div><div class="text-muted small">{{ today }} <span id="clock"></span> {% if session.get('mes_user') %}<a href="{{ url_for('logout') }}" class="ms-3 text-decoration-none">로그아웃</a>{% endif %}</div></div>
+    <div class="content-wrap">
+      {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endfor %}</div>{% endif %}{% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+    <footer>MES Sample <span>·</span> 운영 데이터는 설정된 SQLite 파일에 저장됩니다.</footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}대시보드{% endblock %}{% block page_heading %}대시보드{% endblock %}
+{% block content %}
+<div class="page-intro"><div><div class="eyebrow">PRODUCTION OVERVIEW</div><h1>오늘의 생산 현황</h1><p>생산계획부터 실적까지 오늘의 업무 지표를 확인합니다.</p></div><span class="date-chip"><i class="bi bi-calendar3"></i> {{ today }}</span></div>
+<div class="row g-3 kpi-grid">
+  {% for label,value,unit,color in kpis %}<div class="col-6 col-xl-3"><div class="kpi-card"><div class="kpi-icon {{ color }}"><i class="bi {% if '계획' in label %}bi-calendar-check{% elif '지시' in label %}bi-clipboard-check{% elif '생산' in label %}bi-gear{% elif '양품' in label %}bi-check2-circle{% elif '불량수량' in label or '불량률' in label %}bi-exclamation-circle{% elif '달성률' in label %}bi-graph-up-arrow{% else %}bi-cpu{% endif %}"></i></div><div class="kpi-label">{{ label }}</div><div class="kpi-value">{{ "{:,.0f}".format(value|float) if unit != '%' else value }}<span>{{ unit }}</span></div></div></div>{% endfor %}
+</div>
+<section class="panel mt-4"><div class="panel-heading"><div><h2>최근 작업지시</h2><p>등록된 작업지시 최신 10건</p></div><a class="btn btn-sm btn-outline-primary" href="{{ url_for('orders') }}">작업지시 관리 <i class="bi bi-arrow-right"></i></a></div>
+<div class="table-responsive"><table class="table data-table align-middle"><thead><tr><th>작업지시번호</th><th>작업일자</th><th>제품명</th><th class="text-end">지시수량</th><th>설비</th><th>상태</th></tr></thead><tbody>{% for row in recent %}<tr><td class="fw-semibold">{{ row.order_no }}</td><td>{{ row.work_date }}</td><td>{{ row.product_name }}</td><td class="text-end">{{ "{:,.0f}".format(row.order_qty) }}</td><td>{{ row.equipment_code }}</td><td><span class="badge-state {{ 'state-done' if row.status=='완료' else 'state-active' if row.status=='작업중' else 'state-wait' }}">{{ row.status }}</span></td></tr>{% else %}<tr><td colspan="6" class="empty-state">작업지시가 없습니다. 생산계획을 먼저 등록해 주세요.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

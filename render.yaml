@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: mes-sample
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MES_DATABASE
+        value: /var/data/mes.db
+      - key: MES_USERNAME
+        value: mesadmin
+      - key: MES_PASSWORD
+        generateValue: true
+      - key: MES_SECURE_COOKIE
+        value: "1"
+    disk:
+      name: mes-data
+      mountPath: /var/data
+      sizeGB: 1

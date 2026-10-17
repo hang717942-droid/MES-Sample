@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Secrets and local settings
+.env
+.env.*
+!.env.example
+
+# SQLite databases and backups (desktop and web)
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.backup_*
+*.bak
+
+# Local Flask instance data
+instance/*
+!instance/.gitkeep
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
